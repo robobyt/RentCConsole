@@ -1,0 +1,7 @@
+C:\Users\Duma\source\repos\RentCConsole\RentCConsole\bin\Debug\RentCConsole.exe.config
+C:\Users\Duma\source\repos\RentCConsole\RentCConsole\bin\Debug\RentCConsole.exe
+C:\Users\Duma\source\repos\RentCConsole\RentCConsole\bin\Debug\RentCConsole.pdb
+C:\Users\Duma\source\repos\RentCConsole\RentCConsole\obj\Debug\RentCConsole.csprojAssemblyReference.cache
+C:\Users\Duma\source\repos\RentCConsole\RentCConsole\obj\Debug\RentCConsole.csproj.CoreCompileInputs.cache
+C:\Users\Duma\source\repos\RentCConsole\RentCConsole\obj\Debug\RentCConsole.exe
+C:\Users\Duma\source\repos\RentCConsole\RentCConsole\obj\Debug\RentCConsole.pdb
