@@ -37,39 +37,30 @@ namespace RentCConsole.Views {
             Console.WriteLine("6 Update Customer");
             Console.WriteLine("7 List Customers");
             Console.WriteLine("8 Quit");
+
             while (true) {
                 var key = Console.ReadLine().ToString();
 
                 switch (key) {
                     case "1":
-                        Console.Clear();
-                        controller.AddCarRent(ReservationForm());
-                        Console.ReadKey();
-                        MenuScreen();
+                        AddCarRent();
                         break;
                     case "2":
                         break;
                     case "3":
-                        Console.Clear();
-                        controller.RentsList();
+                        ListRents();
                         break;
                     case "4":
+                        ListCars();
                         break;
                     case "5":
-                        Console.Clear();
-                        controller.AddCustomer(CustomerForm());
-                        Console.ReadKey();
-                        MenuScreen();
+                        AddCustomer();
                         break;
                     case "6":
-                        Console.Clear();
                         UpdateCustomer();
-                        Console.ReadKey();
-                        MenuScreen();
                         break;
                     case "7":
-                        Console.Clear();
-                        controller.CustomersList();
+                        CustomerList();
                         break;
                     case "8":
                         Environment.Exit(0);
@@ -82,30 +73,111 @@ namespace RentCConsole.Views {
             }
         }
 
+        private void ListCars() {
+            Console.Clear();
+            controller.CarsList();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
+        }
+
+        private void ListRents() {
+            Console.Clear();
+            controller.RentsList();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
+        }
+
+        private void AddCarRent() {
+            Console.Clear();
+
+            controller.AddCarRent(ReservationForm());
+
+            Console.WriteLine("New Rent added successful");
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+
+            MenuScreen();
+        }
+
+        private void AddCustomer() {
+            Console.Clear();
+            controller.AddCustomer(CustomerForm());
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
+        }
+
+        private void CustomerList() {
+            Console.Clear();
+            controller.CustomersList();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
+        }
+
         private void UpdateCustomer() {
+            Console.Clear();
+
             Console.WriteLine("Enter Client Id to update");
-            int id = Convert.ToInt32(Console.ReadLine());
+            int id = InputAndValidatInt();
+
             if (controller.FindCustomerById(id)) {
                 controller.UpdateCustomer(CustomerForm(), id);
             }
             else {
                 Console.WriteLine("Customer was not updated");
-                Console.ReadKey();
-                MenuScreen();
             }
+
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
+        }
+
+        // TO DO
+        private void UpdateRent() {
+            Console.Clear();
+
+            Console.WriteLine("Enter Rent Id to update");
+            int id = InputAndValidatInt();
+
+            if (controller.FindCustomerById(id)) {
+                controller.UpdateCustomer(CustomerForm(), id);
+            }
+            else {
+                Console.WriteLine("Customer was not updated");
+            }
+
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
         }
 
         private Customers CustomerForm() {
             Console.Clear();
 
-            Console.WriteLine("Enter Client Name");
-            string name = Console.ReadLine().ToString();
+            string name = null;
+            DateTime birthDate = DateTime.Now;
+            string location = null;
 
-            Console.WriteLine("Enter Client Birthdate");
-            DateTime birthDate = Convert.ToDateTime(Console.ReadLine());
+            while (true) {
+                Console.WriteLine("Enter Client Name");
+                name = Console.ReadLine().ToString();
 
-            Console.WriteLine("Enter Client ZIP code");
-            string location = Console.ReadLine();
+                Console.WriteLine("Enter Client Birthdate");
+                birthDate = InputAndValidatDateTime();
+
+                if (birthDate.Year - DateTime.Now.Year <= 18) {
+                    Console.WriteLine("Customer has turn 18 yars");
+                    continue;
+                }
+
+                Console.WriteLine("Enter Client location code");
+                location = Console.ReadLine();
+
+                break;
+            }
 
             Customers customer = new Customers {
                Name = name,
@@ -118,24 +190,59 @@ namespace RentCConsole.Views {
         private Reservations ReservationForm() {
             Console.Clear();
 
-            Console.WriteLine("Enter Client ID");
-            int id = Convert.ToInt32(Console.ReadLine().ToString());
+            int customerId = 0;
+            int carId = 0;
+            string plate = null;
+            DateTime startDate = DateTime.Now;
+            DateTime endDate = DateTime.Now;
+            string location = null;
 
-            Console.WriteLine("Enter CarID");
-            int plate = Convert.ToInt32(Console.ReadLine().ToString());
+            while (true) {
+                Console.WriteLine("Enter Client ID");
+                customerId = InputAndValidatInt();
 
-            Console.WriteLine("Enter Start date");
-            DateTime startDate = Convert.ToDateTime(Console.ReadLine());
+                if (!controller.FindCustomerById(customerId)){
+                    Console.WriteLine("Customer with id: {0} doesn't exist", customerId);
+                    continue;
+                };
 
-            Console.WriteLine("Enter End date");
-            DateTime endDate = Convert.ToDateTime(Console.ReadLine());
+                Console.WriteLine("Enter Car plate number");
+                plate = Console.ReadLine().ToString();
 
-            Console.WriteLine("Enter Client location");
-            string location = Console.ReadLine();
+                if (controller.FindCarByPlate(plate) < 1) {
+                    Console.WriteLine("Car with number: {0} doesn't exist", plate);
+                    continue;
+                };
+
+                carId = controller.FindCarByPlate(plate);
+
+                Console.WriteLine("Enter Start date");
+                startDate = InputAndValidatDateTime();
+
+                if(startDate.Ticks < DateTime.Now.Ticks) {
+                    Console.WriteLine("Please, set date not earler then today");
+                    continue;
+                }
+
+                Console.WriteLine("Enter End date");
+                endDate = InputAndValidatDateTime();
+
+                if (endDate.CompareTo(startDate) < 0) {
+                    Console.WriteLine("End date hasn't be earlier then start date");
+                    continue;
+                }
+
+                Console.WriteLine("Enter Client location");
+                location = Console.ReadLine().ToString();
+                break;
+            }
+
+
 
             Reservations reservation = new Reservations {
-                CustomerID = id,
-                CarID = plate,
+                CustomerID = customerId,
+                CarID = carId,
+                CarPlate = plate,
                 StartDate = startDate,
                 EndDate = endDate, 
                 Location = location
@@ -144,5 +251,28 @@ namespace RentCConsole.Views {
             return reservation;
         }
 
+        private DateTime InputAndValidatDateTime() {
+            DateTime date = DateTime.UtcNow;
+            while (!DateTime.TryParse(Console.ReadLine(), out date)) {
+                Console.WriteLine("Please enter date in format: dd.mm.year");
+            }
+            return date;
+        }
+
+        private int InputAndValidatInt() {
+            int number = 0;
+            while(!int.TryParse(Console.ReadLine(), out number)) {
+                Console.WriteLine("Please enter positive number");
+            }
+            return number;
+        }
+
+        private void WarningMessage(string str) {
+
+        }
+
+        private void ErrorMessage(string str) {
+
+        }
     }
 }

@@ -26,6 +26,22 @@ namespace RentCConsole {
                 Console.WriteLine("{0}         | {1}        | {2}", reader[0], reader[1], reader[2]);
             }
 
+            reader.Close();
+            connection.Close();
+        }
+
+        internal void CarsList() {
+            SqlCommand cmd = new SqlCommand("SELECT CarID, Plate, Manufacturer, Model, PricePerDay FROM Cars", connection);
+            connection.Open();
+            cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            Console.WriteLine("CarID: |  Plate: | Manufacturer: | Model: | PricePerDay: |");
+            while (reader.Read()) {
+                Console.WriteLine("{0}         | {1}        | {2}      | {3}     | {4}", reader[0], reader[1], reader[2], reader[3], reader[4]);
+            }
+
+            reader.Close();
             connection.Close();
         }
 
@@ -44,6 +60,7 @@ namespace RentCConsole {
                 Console.WriteLine("{0} | {1} | {2} | {3} | {4}", reader[0], reader[1], reader[2], reader[3], reader[4]);
             }
 
+            reader.Close();
             connection.Close();
         }
 
@@ -95,6 +112,22 @@ namespace RentCConsole {
 
             Console.WriteLine("Customer with ID {0} doesn't exist.", customerID);
             return false;
+        }
+
+        internal int FindCarByPlate(string plateNumber) {
+            SqlCommand cmd = new SqlCommand("SELECT CarID FROM Cars WHERE Plate = @plate", connection);
+            connection.Open();
+            cmd.Parameters.AddWithValue("@plate", plateNumber);
+
+            int carID = (int)cmd.ExecuteScalar();
+
+            if (carID > 0) 
+                Console.WriteLine("Car with plate number {0} exist.", plateNumber);
+            else  
+                Console.WriteLine("Car with plate number {0} doesn't exist.", plateNumber);
+
+            connection.Close();
+            return carID;
         }
 
         internal void AddCarRent(Reservations reservation) {
