@@ -6,5 +6,8 @@ using System.Threading.Tasks;
 
 namespace RentCConsole.Models {
     class Coupons {
+        public string CouponCode { get; set; }
+        public decimal Discount { get; set; }
+        public string Description { get; set; }
     }
 }

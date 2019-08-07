@@ -9,7 +9,8 @@ namespace RentCConsole.Models {
         public Customers customer { get; set; }
         public Cars car { get; set; }
         public Coupons CouponCode { get; set; }
-        public ReservationStatuses ReservStatsID { get; set; }
+        public ReservationStatuses reservationStatuses { get; set; }
+        public int ReservStatsID { get; set; }
         public int CustomerID { get; set; }
         public int CarID { get; set; }
         public string CarPlate { get; set; }
