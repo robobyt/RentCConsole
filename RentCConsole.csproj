@@ -45,19 +45,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbController.cs" />
+    <Compile Include="DbControllers\CarController.cs" />
+    <Compile Include="DbControllers\CustomerController.cs" />
+    <Compile Include="DbControllers\ReservationController.cs" />
     <Compile Include="Models\Cars.cs" />
     <Compile Include="Models\Coupons.cs" />
     <Compile Include="Models\Customers.cs" />
-    <Compile Include="Models\IController.cs" />
+    <Compile Include="DbControllers\IController.cs" />
     <Compile Include="Models\Permissions.cs" />
     <Compile Include="Models\Reservations.cs" />
     <Compile Include="Models\ReservationStatuses.cs" />
     <Compile Include="Models\Roles.cs" />
     <Compile Include="Models\RolesPermissions.cs" />
     <Compile Include="Models\Users.cs" />
+    <Compile Include="Process.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Views\CarView.cs" />
+    <Compile Include="Views\CustomerView.cs" />
+    <Compile Include="Views\ReservationView.cs" />
+    <Compile Include="Views\View.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

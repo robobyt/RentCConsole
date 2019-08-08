@@ -20,7 +20,7 @@ namespace RentCConsole {
             SqlConnection connection = new SqlConnection(connectionString);
 
             DbController controller = new DbController(connection);
-            View view = new View(controller);
+            View view = new View(connection);
             view.Process();
 
         }
