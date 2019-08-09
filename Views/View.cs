@@ -88,16 +88,14 @@ namespace RentCConsole.Views {
         private void ListCars() {
             Console.Clear();
             carController.CarsList();
-            GoToMainMenu();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
         }
 
         private void ListReservations() {
             Console.Clear();
             reservationController.ReservationsList();
-            GoToMainMenu();
-        }
-
-        private void GoToMainMenu() {
             Console.WriteLine("Press any key");
             Console.ReadKey();
             MenuScreen();
@@ -109,19 +107,26 @@ namespace RentCConsole.Views {
             reservationController.AddReservation(ReservationForm());
 
             Console.WriteLine("New Reservation added successful");
-            GoToMainMenu();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+
+            MenuScreen();
         }
 
         private void AddCustomer() {
             Console.Clear();
             customerController.AddCustomer(CustomerForm());
-            GoToMainMenu();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
         }
 
         private void CustomerList() {
             Console.Clear();
             customerController.CustomerList();
-            GoToMainMenu();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
         }
 
         private void UpdateCustomer() {
@@ -130,8 +135,6 @@ namespace RentCConsole.Views {
             Console.WriteLine("Enter Client Id to update");
             int id = Utility.InputAndValidatInt();
 
-            CheckIfCustomerExist(id);
-
             if (customerController.FindCustomerById(id)) {
                 customerController.UpdateCustomer(CustomerForm(), id);
             }
@@ -139,7 +142,9 @@ namespace RentCConsole.Views {
                 Console.WriteLine("Reservation was not updated");
             }
 
-            GoToMainMenu();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
         }
 
         private void UpdateReservation() {
@@ -147,18 +152,15 @@ namespace RentCConsole.Views {
 
             int customerId = 0;
             int carId = 0;
-            string location = null;
+            string plate = null;
             DateTime startDate = DateTime.Now;
 
             Console.WriteLine("Enter data for searching reservation:");
             Console.WriteLine("-----------------------");
 
-            CustomerIdToLocation(ref customerId, ref location);
-            carId = CarPlateToCarId();
+            GatherSignatureForReservation(out customerId, out carId, out plate, out startDate);
 
-            startDate = Utility.CheckIfCorrectDate(startDate);
-
-            CheckIfReservationExist(ref customerId, ref carId, startDate);
+            CheckIfReservationExist(ref customerId, ref carId, ref plate, startDate);
 
             Console.WriteLine("Press any key to change reservation");
             Console.ReadKey();
@@ -172,7 +174,25 @@ namespace RentCConsole.Views {
 
             reservationController.UpdateReservation(reservation, customerId, carId, startDate);
 
-            GoToMainMenu();
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            MenuScreen();
+        }
+
+        private void GatherSignatureForReservation(out int customerId, out int carId, out string plate, out DateTime startDate) {
+            Console.WriteLine("Enter Client ID");
+
+            customerId = Utility.InputAndValidatInt();
+            customerId = CheckIfCustomerExist(customerId);
+
+            Console.WriteLine("Enter Car plate number");
+            plate = Console.ReadLine().ToString();
+            plate = CheckIfPlateExist(plate);
+
+            carId = carController.FindCarByPlate(plate);
+
+            Console.WriteLine("Enter Start date");
+            startDate = Utility.InputAndValidatDateTime();
         }
 
         private Customers CustomerForm() {
@@ -199,24 +219,28 @@ namespace RentCConsole.Views {
             return customer;
         }
 
+        
+
         private Reservations ReservationForm() {
             Console.Clear();
+
             int customerId = 0;
-            string location = null;
+            int carId = 0;
+            string plate = null;
             DateTime startDate = DateTime.Now;
             DateTime endDate = DateTime.Now;
+            string location = null;
 
-            CustomerIdToLocation(ref customerId, ref location);
-
-            int carId = CarPlateToCarId();
-
-            CheckIfCarAvailableAtLocation(ref carId, ref location);
+            GatherSignatureForReservation(out customerId, out carId, out plate, out startDate);
 
             startDate = Utility.CheckIfCorrectDate(startDate);
 
             Console.WriteLine("Enter End date");
             endDate = Utility.InputAndValidatDateTime();
             startDate = Utility.CheckIfEndDateIsCorrect(startDate, endDate);
+
+            Console.WriteLine("Enter Client location");
+            location = Console.ReadLine().ToString();
 
             Reservations reservation = new Reservations {
                 CustomerID = customerId,
@@ -230,58 +254,33 @@ namespace RentCConsole.Views {
             return reservation;
         }
 
-        private int CarPlateToCarId() {
-            Console.WriteLine("Enter Car plate number");
-            string plate = Console.ReadLine().ToString();
-            int carId = CheckIfPlateExist(plate);
-            return carId;
-        }
-
-        private void CustomerIdToLocation(ref int customerId, ref string location) {
-            Console.WriteLine("Enter Client ID");
-            customerId = Utility.InputAndValidatInt();
-            location = CheckIfCustomerExist(customerId);
-        }
-
-        private void CheckIfReservationExist(ref int customerId, ref int carId, DateTime startDate) {
+        private void CheckIfReservationExist(ref int customerId, ref int carId, ref string plate, DateTime startDate) {
             bool checkReservExist = reservationController.FindReservationByKeys(customerId, carId, startDate);
-            string location = null;
 
             while (!checkReservExist) {
                 Console.WriteLine("Reservation with customer ID {0} " +
                     "and start date {1} doesn't exist exist! Please, enter another data" +
                     " presss ESC to back Main menu", customerId, startDate);
 
-                CustomerIdToLocation(ref customerId, ref location);
-                carId = CarPlateToCarId();
-                startDate = Utility.CheckIfCorrectDate(startDate);
+                GatherSignatureForReservation(out customerId, out carId, out plate, out startDate);
 
                 checkReservExist = reservationController.FindReservationByKeys(customerId, carId, startDate);
             }
         }
 
-        private void CheckIfCarAvailableAtLocation(ref int carId, ref string location) {
-            bool checkReservExist = carController.FindAvailableCar(carId, location);
-            while (!checkReservExist) {
-                Console.WriteLine("There are no cars in {0}! Please, enter another plate number" +
-                    "or presss ESC to back Main menu", location);
-                carId = CarPlateToCarId();
-                checkReservExist = carController.FindAvailableCar(carId, location);
-            }
-        }
 
-        private string CheckIfCustomerExist(int customerId) {
-            string location = customerController.FindCustomerLocationById(customerId);
-            while (location == null) {
+        private int CheckIfCustomerExist(int customerId) {
+            bool exist = customerController.FindCustomerById(customerId);
+            while (!exist) {
                 Console.WriteLine("Customer with id: {0} doesn't exist", customerId);
                 Console.WriteLine("Try one more! To exit in main menu hit ESC");
                 customerId = Utility.InputAndValidatInt();
-                location = customerController.FindCustomerLocationById(customerId);
+                exist = customerController.FindCustomerById(customerId);
             };
-            return location;
+            return customerId;
         }
 
-        private int CheckIfPlateExist(string plate) {
+        private string CheckIfPlateExist(string plate) {
             int car = carController.FindCarByPlate(plate);
             while (car < 1) {
                 Console.WriteLine("Car with number: {0} doesn't exist", plate);
@@ -290,7 +289,7 @@ namespace RentCConsole.Views {
                 car = carController.FindCarByPlate(plate);
             }
 
-            return car;
+            return plate;
         }
        
     }

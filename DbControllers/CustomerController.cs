@@ -83,21 +83,5 @@ namespace RentCConsole.DbControllers {
                 return false;
             }
         }
-
-        public string FindCustomerLocationById(int customerID) {
-            using (SqlCommand cmd = new SqlCommand("SELECT Location FROM Customers WHERE CustomerID = @customerID", connection)) {
-                connection.Open();
-                cmd.Parameters.AddWithValue("@customerID", customerID);
-                object customerLocation = cmd.ExecuteScalar();
-                connection.Close();
-
-                if (customerLocation == null) {
-                    Console.WriteLine("Customer with ID {0} doesn't exist.", customerID);
-                    return null;
-                }
-                Console.WriteLine("Customer with ID {0} exist. You can update data", customerID);
-                return (string)customerLocation;
-            }
-        }
     }
 }
