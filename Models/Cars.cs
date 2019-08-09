@@ -10,5 +10,6 @@ namespace RentCConsole.Models {
         public string Manufacturer { get; set; }
         public string Model { get; set; }
         public decimal PricePerDay { get; set; }
+        public bool IsBusy { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace RentCConsole.DbControllers {
         }
 
         internal void CarsList() {
-            using (SqlCommand cmd = new SqlCommand("SELECT CarID, Plate, Manufacturer, Model, PricePerDay FROM Cars", connection)) {
+            using (SqlCommand cmd = new SqlCommand("SELECT CarID, Plate, Manufacturer, Model, PricePerDay FROM Cars WHERE IsBusy = 0", connection)) {
                 connection.Open();
                 cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (SqlDataReader reader = cmd.ExecuteReader()) {
@@ -53,6 +53,27 @@ namespace RentCConsole.DbControllers {
                 return (int)carID;
             }
  
+        }
+
+        internal bool FindAvailableCar(int carId, string location) {
+            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Cars " +
+                "WHERE CarID = @CarId AND IsBusy = 0 AND Location = @location", connection)) {
+                connection.Open();
+                cmd.Parameters.AddWithValue("@CarID", carId);
+                cmd.Parameters.AddWithValue("@location", location);
+
+                object carID = cmd.ExecuteScalar();
+                connection.Close();
+
+                if (carID == null || (int)carID == 0) {
+                    Console.WriteLine("There isn't available car in {0}.", location);
+                    return false;
+                }
+                else
+                    Console.WriteLine("There is available car in {0}.", location);
+
+                return true;
+            }
         }
     }
 }

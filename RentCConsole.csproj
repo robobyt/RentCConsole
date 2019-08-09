@@ -51,7 +51,6 @@
     <Compile Include="Models\Cars.cs" />
     <Compile Include="Models\Coupons.cs" />
     <Compile Include="Models\Customers.cs" />
-    <Compile Include="DbControllers\IController.cs" />
     <Compile Include="Models\Permissions.cs" />
     <Compile Include="Models\Reservations.cs" />
     <Compile Include="Models\ReservationStatuses.cs" />

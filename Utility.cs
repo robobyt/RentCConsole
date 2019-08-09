@@ -24,8 +24,9 @@ namespace RentCConsole {
 
         public static DateTime CheckIfEndDateIsCorrect(DateTime startDate, DateTime endDate) {
             while (endDate < startDate) {
-                Console.WriteLine("End date can't be earlier then start date");
+                Console.WriteLine("End date can't be earlier then start date. Input start date:");
                 startDate = InputAndValidatDateTime();
+                Console.WriteLine("Input end date:");
                 endDate = InputAndValidatDateTime();
             }
 
