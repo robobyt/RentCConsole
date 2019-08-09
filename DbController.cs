@@ -15,6 +15,7 @@ namespace RentCConsole {
             connection = con;
         }
 
+        // TODO Change to using in order to don't miss Dispose method
         internal void CustomersList() {
             SqlCommand cmd = new SqlCommand("SELECT CustomerID, Name, BirthDate FROM Customers", connection);
             connection.Open();
@@ -199,6 +200,7 @@ namespace RentCConsole {
             Console.WriteLine("{0} Reservations was added ", number);
             connection.Close();
         }
+
 
 
     }
