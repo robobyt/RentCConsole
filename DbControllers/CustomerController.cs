@@ -16,23 +16,27 @@ namespace RentCConsole.DbControllers {
         }
 
         /// <summary>
-        /// Display all registered customers
+        /// Returns List of string arrays of all customers
         /// </summary>
-        public void CustomerList() {
+        public List<string[]> CustomerList() {
+            List<string[]> customers = new List<string[]>();
             using (SqlCommand cmd = new SqlCommand("SELECT CustomerID, Name, BirthDate FROM Customers", connection)) {
                 connection.Open();
                 cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (SqlDataReader reader = cmd.ExecuteReader()) {
-                    Console.WriteLine("CustomerID: |  Name: | BirthDate: |");
+                    customers.Add(new string[] { "CustomerID:", "Name:", "BirthDate:"});
                     while (reader.Read()) {
-                        Console.WriteLine("{0}         | {1}        | {2}", reader[0], reader[1], reader[2]);
+                        string[] row = new string[reader.FieldCount];
+                        for (int i = 0; i < row.Length; i++) {
+                            row[i] = reader[i].ToString();
+                        }
+                        customers.Add(row);
                     }
-
                     reader.Close();
                 }
                 connection.Close();
             }
- 
+            return customers;
         }
 
         /// <summary>

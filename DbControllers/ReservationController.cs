@@ -16,9 +16,11 @@ namespace RentCConsole.DbControllers {
         }
 
         /// <summary>
-        /// Display all reservations 
+        /// Returns List of string arrays of all reservations 
         /// </summary>
-        public void ReservationsList() {
+        public List<string[]> ReservationsList() {
+            List<string[]> reservations = new List<string[]>();
+
             string sqlExpression =
                 "SELECT Cars.Plate, Reservations.CustomerID, Reservations.StartDate, " +
                 "Reservations.EndDate, Reservations.Location" +
@@ -27,14 +29,19 @@ namespace RentCConsole.DbControllers {
                 connection.Open();
                 cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (SqlDataReader reader = cmd.ExecuteReader()) {
-                    Console.WriteLine("Car Plate | ClientID | StartDate | EndDate | Location");
+                    reservations.Add(new string[] { "Car Plate:", "ClientID:", "StartDate:", "EndDate:", "Location:" });
                     while (reader.Read()) {
-                        Console.WriteLine("{0} | {1} | {2} | {3} | {4}", reader[0], reader[1], reader[2], reader[3], reader[4]);
+                        string[] row = new string[reader.FieldCount];
+                        for (int i = 0; i < row.Length; i++) {
+                            row[i] = reader[i].ToString();
+                        }
+                        reservations.Add(row);
                     }
                     reader.Close();
                 }
                 connection.Close();
             }
+            return reservations;
         }
 
         internal void CheckingUnclosedReservations() {

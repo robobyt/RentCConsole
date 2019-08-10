@@ -48,6 +48,7 @@
     <Compile Include="DbControllers\CarController.cs" />
     <Compile Include="DbControllers\CustomerController.cs" />
     <Compile Include="DbControllers\ReservationController.cs" />
+    <Compile Include="TablePrinter.cs" />
     <Compile Include="Models\Cars.cs" />
     <Compile Include="Models\Coupons.cs" />
     <Compile Include="Models\Customers.cs" />

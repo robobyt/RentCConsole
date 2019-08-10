@@ -15,22 +15,29 @@ namespace RentCConsole.DbControllers {
         }
 
         /// <summary>
-        /// Display all available cars. It means all cars those were not booked
+        /// Returns List of string arrays of all available cars. It means all cars those were not booked
         /// </summary>
-        internal void CarsList() {
+        internal List<string[]> CarsList() {
+            List<string[]> cars = new List<string[]>();
+
             using (SqlCommand cmd = new SqlCommand("SELECT CarID, Plate, Manufacturer, Model, PricePerDay FROM Cars WHERE IsBusy = 0", connection)) {
                 connection.Open();
                 cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (SqlDataReader reader = cmd.ExecuteReader()) {
-                    Console.WriteLine("CarID: |  Plate: | Manufacturer: | Model: | PricePerDay: |");
+
+                    cars.Add(new string[] { "CarID:", "Plate:", "Manufacturer:", " Model:", "PricePerDay:" });
                     while (reader.Read()) {
-                        Console.WriteLine("{0}         | {1}        | {2}      | {3}     | {4}", reader[0], reader[1], reader[2], reader[3], reader[4]);
+                        string[] row = new string[reader.FieldCount];
+                        for (int i = 0; i < row.Length; i++) {
+                            row[i] = reader[i].ToString();
+                        }
+                        cars.Add(row);
                     }
                     reader.Close();
                 }
                 connection.Close();
             }
-                
+            return cars;
         }
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace RentCConsole.Views {
         /// Every day checking if in the database are unclosed reservations
         /// </summary>
         private void CheckingUnclosedReservations() {
-            reservationController.CheckingUnclosedReservations();
+            //reservationController.CheckingUnclosedReservations();
         }
 
         private void MenuScreen() {
@@ -100,13 +100,19 @@ namespace RentCConsole.Views {
 
         private void ListCars() {
             Console.Clear();
-            carController.CarsList();
+            TablePrinter.GetDataInTableFormat(carController.CarsList());
+            GoToMainMenu();
+        }
+
+        private void CustomerList() {
+            Console.Clear();
+            TablePrinter.GetDataInTableFormat(customerController.CustomerList());
             GoToMainMenu();
         }
 
         private void ListReservations() {
             Console.Clear();
-            reservationController.ReservationsList();
+            TablePrinter.GetDataInTableFormat(reservationController.ReservationsList());
             GoToMainMenu();
         }
 
@@ -128,12 +134,6 @@ namespace RentCConsole.Views {
         private void AddCustomer() {
             Console.Clear();
             customerController.AddCustomer(CustomerForm());
-            GoToMainMenu();
-        }
-
-        private void CustomerList() {
-            Console.Clear();
-            customerController.CustomerList();
             GoToMainMenu();
         }
 
