@@ -14,6 +14,9 @@ namespace RentCConsole.DbControllers {
             connection = con;
         }
 
+        /// <summary>
+        /// Display all available cars. It means all cars those were not booked
+        /// </summary>
         internal void CarsList() {
             using (SqlCommand cmd = new SqlCommand("SELECT CarID, Plate, Manufacturer, Model, PricePerDay FROM Cars WHERE IsBusy = 0", connection)) {
                 connection.Open();
@@ -31,7 +34,7 @@ namespace RentCConsole.DbControllers {
         }
 
         /// <summary>
-        /// Try to find query by plate number. If it exists method returns CarID
+        /// Try to find the car by plate number. If car exists method returns CarID
         /// </summary>
         /// <param name="plateNumber"></param>
         /// <returns></returns>
@@ -55,6 +58,13 @@ namespace RentCConsole.DbControllers {
  
         }
 
+        /// <summary>
+        /// When a customer wants to create a new reservation we have to be sure
+        /// that the car is available in the city where the customer is.
+        /// </summary>
+        /// <param name="carId"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
         internal bool FindAvailableCar(int carId, string location) {
             using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Cars " +
                 "WHERE CarID = @CarId AND IsBusy = 0 AND Location = @location", connection)) {

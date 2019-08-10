@@ -15,6 +15,9 @@ namespace RentCConsole.DbControllers {
             connection = con;
         }
 
+        /// <summary>
+        /// Display all registered customers
+        /// </summary>
         public void CustomerList() {
             using (SqlCommand cmd = new SqlCommand("SELECT CustomerID, Name, BirthDate FROM Customers", connection)) {
                 connection.Open();
@@ -32,6 +35,10 @@ namespace RentCConsole.DbControllers {
  
         }
 
+        /// <summary>
+        /// The method accepts Customers instance and adds a new query to the database. 
+        /// </summary>
+        /// <param name="customer"></param>
         public void AddCustomer(Customers customer) {
 
             string sqlExpression =
@@ -50,6 +57,11 @@ namespace RentCConsole.DbControllers {
        
         }
 
+        /// <summary>
+        /// The method accepts id  of existing Customers record and change it to Customers instance
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="customerID"></param>
         public void UpdateCustomer(Customers customer, int customerID) {
 
             string sqlExpression =
@@ -68,6 +80,12 @@ namespace RentCConsole.DbControllers {
 
         }
 
+        /// <summary>
+        /// If we want to update Customers record we have to be sure that this record exists. 
+        /// Method returns true if CustomerID was finded
+        /// </summary>
+        /// <param name="customerID"></param>
+        /// <returns></returns>
         public bool FindCustomerById(int customerID) {
             using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Customers WHERE CustomerID = @customerID", connection)) {
                 connection.Open();
@@ -84,6 +102,12 @@ namespace RentCConsole.DbControllers {
             }
         }
 
+        /// <summary>
+        /// Method returns customer location if record was found by Customer ID.
+        /// We need to know customer location for compare it with the car location
+        /// </summary>
+        /// <param name="customerID"></param>
+        /// <returns></returns>
         public string FindCustomerLocationById(int customerID) {
             using (SqlCommand cmd = new SqlCommand("SELECT Location FROM Customers WHERE CustomerID = @customerID", connection)) {
                 connection.Open();

@@ -21,7 +21,13 @@ namespace RentCConsole.Views {
         // TODO : Add CheckAndClose method. When we try to find available car run this method
         //and check if Now > EndDate and Reservation is not closed or not cancelled then close it and set car available
 
+        /// <summary>
+        /// Befor we run the main window and allow customer working there 
+        /// we should check if all reservations were closed
+        /// </summary>
         public void Process() {
+            CheckingUnclosedReservations();
+
             Console.WriteLine("Welcome to RentC, your brand new solution " +
                "to manage and control your company's data without missing anything");
 
@@ -36,6 +42,13 @@ namespace RentCConsole.Views {
                     Environment.Exit(0);
             }
 
+        }
+
+        /// <summary>
+        /// Every day checking if in the database are unclosed reservations
+        /// </summary>
+        private void CheckingUnclosedReservations() {
+            reservationController.CheckingUnclosedReservations();
         }
 
         private void MenuScreen() {
@@ -142,12 +155,19 @@ namespace RentCConsole.Views {
             GoToMainMenu();
         }
 
+        /// <summary>
+        /// Run first form to input ID's for checking is reservation exists.
+        /// Next ask customer if he wants canel the reservation. If true
+        /// run CancelReservation. If not run the reservation form and next run UpdateReservation
+        /// </summary>
         private void UpdateReservation() {
             Console.Clear();
 
             int customerId = 0;
             int carId = 0;
             string location = null;
+            Reservations reservation;
+
             DateTime startDate = DateTime.Now;
 
             Console.WriteLine("Enter data for searching reservation:");
@@ -156,25 +176,32 @@ namespace RentCConsole.Views {
             CustomerIdToLocation(ref customerId, ref location);
             carId = CarPlateToCarId();
 
-            startDate = Utility.CheckIfCorrectDate(startDate);
+            Console.WriteLine("Please input start date of reservation");
+            startDate = Utility.InputAndValidatDateTime();
 
             CheckIfReservationExist(ref customerId, ref carId, startDate);
 
             Console.WriteLine("Press any key to change reservation");
             Console.ReadKey();
 
-            var reservation = ReservationForm();
-
             Console.WriteLine("If you wnt to cancel reservation hit 1 otherwise any button");
             int cancel = Utility.InputAndValidatInt();
 
-            reservation.ReservStatsID = cancel == 1 ? 3 : 1;
+            if(cancel == 1) {
+                reservationController.CancelReservation(customerId, carId, startDate);
+                GoToMainMenu();
+            }
 
+            reservation = ReservationForm();
             reservationController.UpdateReservation(reservation, customerId, carId, startDate);
 
             GoToMainMenu();
         }
 
+        /// <summary>
+        /// Create Customers instance from inputs data
+        /// </summary>
+        /// <returns></returns>
         private Customers CustomerForm() {
             Console.Clear();
 
@@ -199,6 +226,10 @@ namespace RentCConsole.Views {
             return customer;
         }
 
+        /// <summary>
+        /// Create Reservations instance from inputs data.
+        /// </summary>
+        /// <returns></returns>
         private Reservations ReservationForm() {
             Console.Clear();
             int customerId = 0;
@@ -230,6 +261,10 @@ namespace RentCConsole.Views {
             return reservation;
         }
 
+        /// <summary>
+        /// Ask user to input car plate. If car with this plate exists method retirns car ID
+        /// </summary>
+        /// <returns></returns>
         private int CarPlateToCarId() {
             Console.WriteLine("Enter Car plate number");
             string plate = Console.ReadLine().ToString();
@@ -237,12 +272,24 @@ namespace RentCConsole.Views {
             return carId;
         }
 
+        /// <summary>
+        /// Ask user to input customer ID. If customer with this ID exists method 
+        /// returns customer location
+        /// </summary>
+        /// <returns></returns>
         private void CustomerIdToLocation(ref int customerId, ref string location) {
             Console.WriteLine("Enter Client ID");
             customerId = Utility.InputAndValidatInt();
             location = CheckIfCustomerExist(customerId);
         }
 
+        /// <summary>
+        /// Before updating reservation we have to be sure that we have exactly record in the database.
+        /// Reservation from one customer for one car in the same city isn't allowed with the same date.
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="carId"></param>
+        /// <param name="startDate"></param>
         private void CheckIfReservationExist(ref int customerId, ref int carId, DateTime startDate) {
             bool checkReservExist = reservationController.FindReservationByKeys(customerId, carId, startDate);
             string location = null;
@@ -260,16 +307,26 @@ namespace RentCConsole.Views {
             }
         }
 
+        /// <summary>
+        /// Checking if the car is available in the same city where customer is
+        /// </summary>
+        /// <param name="carId"></param>
+        /// <param name="location"></param>
         private void CheckIfCarAvailableAtLocation(ref int carId, ref string location) {
             bool checkReservExist = carController.FindAvailableCar(carId, location);
             while (!checkReservExist) {
-                Console.WriteLine("There are no cars in {0}! Please, enter another plate number" +
+                Console.WriteLine("There are no cars in {0}! Please, enter another plate number " +
                     "or presss ESC to back Main menu", location);
                 carId = CarPlateToCarId();
                 checkReservExist = carController.FindAvailableCar(carId, location);
             }
         }
 
+        /// <summary>
+        /// Chiking customer ID inputs from customers. If it is correct returns customer location
+        /// </summary>
+        /// <param name="plate"></param>
+        /// <returns></returns>
         private string CheckIfCustomerExist(int customerId) {
             string location = customerController.FindCustomerLocationById(customerId);
             while (location == null) {
@@ -281,6 +338,11 @@ namespace RentCConsole.Views {
             return location;
         }
 
+        /// <summary>
+        /// Chiking car plate inputs from customers. If it is correct returns car ID
+        /// </summary>
+        /// <param name="plate"></param>
+        /// <returns></returns>
         private int CheckIfPlateExist(string plate) {
             int car = carController.FindCarByPlate(plate);
             while (car < 1) {
