@@ -19,7 +19,6 @@ namespace RentCConsole {
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection connection = new SqlConnection(connectionString);
 
-            DbController controller = new DbController(connection);
             View view = new View(connection);
             view.Process();
 

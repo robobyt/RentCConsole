@@ -20,11 +20,11 @@ namespace RentCConsole.DbControllers {
         /// </summary>
         public List<string[]> CustomerList() {
             List<string[]> customers = new List<string[]>();
-            using (SqlCommand cmd = new SqlCommand("SELECT CustomerID, Name, BirthDate FROM Customers", connection)) {
+            using (SqlCommand cmd = new SqlCommand("SELECT CustomerID, Name, BirthDate, Location FROM Customers", connection)) {
                 connection.Open();
                 cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (SqlDataReader reader = cmd.ExecuteReader()) {
-                    customers.Add(new string[] { "CustomerID:", "Name:", "BirthDate:"});
+                    customers.Add(new string[] { "CustomerID:", "Name:", "BirthDate:", "Location:" });
                     while (reader.Read()) {
                         string[] row = new string[reader.FieldCount];
                         for (int i = 0; i < row.Length; i++) {

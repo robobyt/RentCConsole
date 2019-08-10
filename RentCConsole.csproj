@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbController.cs" />
     <Compile Include="DbControllers\CarController.cs" />
     <Compile Include="DbControllers\CustomerController.cs" />
     <Compile Include="DbControllers\ReservationController.cs" />
