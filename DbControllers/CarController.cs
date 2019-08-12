@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RentCConsole.DbControllers {
-    class CarController {
+    class CarController : ICarController{
         private SqlConnection connection;
 
         internal CarController(SqlConnection con) {
@@ -17,7 +17,7 @@ namespace RentCConsole.DbControllers {
         /// <summary>
         /// Returns List of string arrays of all available cars. It means all cars those were not booked
         /// </summary>
-        internal List<string[]> CarsList() {
+        public List<string[]> CarsList() {
             List<string[]> cars = new List<string[]>();
 
             using (SqlCommand cmd = new SqlCommand("SELECT CarID, Plate, Manufacturer, Model, PricePerDay FROM Cars WHERE IsBusy = 0", connection)) {
@@ -45,7 +45,7 @@ namespace RentCConsole.DbControllers {
         /// </summary>
         /// <param name="plateNumber"></param>
         /// <returns></returns>
-        internal int FindCarByPlate(string plateNumber) {
+        public int FindCarByPlate(string plateNumber) {
             using (SqlCommand cmd = new SqlCommand("SELECT CarID FROM Cars WHERE Plate = @plate", connection)) {
                 connection.Open();
                 cmd.Parameters.AddWithValue("@plate", plateNumber);
@@ -72,7 +72,7 @@ namespace RentCConsole.DbControllers {
         /// <param name="carId"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        internal bool FindAvailableCar(int carId, string location) {
+        public bool FindAvailableCar(int carId, string location) {
             using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Cars " +
                 "WHERE CarID = @CarId AND IsBusy = 0 AND Location = @location", connection)) {
                 connection.Open();

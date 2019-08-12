@@ -22,6 +22,7 @@ namespace RentCConsole {
             return number;
         }
 
+        //TODO Use TimeSpan
         public static DateTime CheckIfEndDateIsCorrect(DateTime startDate, DateTime endDate) {
             while (endDate < startDate) {
                 Console.WriteLine("End date can't be earlier then start date. Input start date:");

@@ -7,9 +7,9 @@ namespace RentCConsole.Views {
     class View {
         private SqlConnection connection;
 
-        private CarController carController;
-        private ReservationController reservationController;
-        private CustomerController customerController;
+        private ICarController carController;
+        private IReservationController reservationController;
+        private ICustomerController customerController;
 
         public View(SqlConnection con) {
             connection = con;
@@ -48,7 +48,7 @@ namespace RentCConsole.Views {
         /// Every day checking if in the database are unclosed reservations
         /// </summary>
         private void CheckingUnclosedReservations() {
-            //reservationController.CheckingUnclosedReservations();
+            reservationController.CloseReservation();
         }
 
         private void MenuScreen() {

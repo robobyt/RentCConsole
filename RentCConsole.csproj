@@ -46,6 +46,9 @@
   <ItemGroup>
     <Compile Include="DbControllers\CarController.cs" />
     <Compile Include="DbControllers\CustomerController.cs" />
+    <Compile Include="DbControllers\ICarController.cs" />
+    <Compile Include="DbControllers\ICustomerController.cs" />
+    <Compile Include="DbControllers\IReservationController.cs" />
     <Compile Include="DbControllers\ReservationController.cs" />
     <Compile Include="TablePrinter.cs" />
     <Compile Include="Models\Cars.cs" />

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RentCConsole.DbControllers {
-    class ReservationController {
+    class ReservationController : IReservationController {
         private SqlConnection connection;
 
         public ReservationController(SqlConnection con) {
@@ -44,8 +44,8 @@ namespace RentCConsole.DbControllers {
             return reservations;
         }
 
-        internal void CheckingUnclosedReservations() {
-            throw new NotImplementedException();
+        public void CloseReservation() {
+            string sql = "SELECT COUNT(*) FROM Reservations where date(EndDate) < date(now())"; ;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace RentCConsole.DbControllers {
         /// <param name="oldCustomerID"></param>
         /// <param name="oldCarID"></param>
         /// <param name="oldStartDate"></param>
-        internal void UpdateReservation(Reservations reservation, int oldCustomerID, int oldCarID, DateTime oldStartDate) {
+        public void UpdateReservation(Reservations reservation, int oldCustomerID, int oldCarID, DateTime oldStartDate) {
             string firstExpression =
                 @"UPDATE Reservations SET CarID=@CarID, CustomerID=@CustomerID, 
                  StartDate=@StartDate, EndDate=@EndDate, Location=@Location
@@ -141,7 +141,7 @@ namespace RentCConsole.DbControllers {
         /// <param name="CustomerID"></param>
         /// <param name="CarID"></param>
         /// <param name="StartDate"></param>
-        internal void CancelReservation(int CustomerID, int CarID, DateTime StartDate) {
+        public void CancelReservation(int CustomerID, int CarID, DateTime StartDate) {
             string firstExpression =
                 @"UPDATE Reservations SET ReservStatsID=@ReservStatsID WHERE CustomerID=@CustomerID AND CarID=@CarID AND StartDate=@StartDate";
             using (SqlCommand cmd = new SqlCommand(firstExpression, connection)) {
@@ -171,7 +171,7 @@ namespace RentCConsole.DbControllers {
         /// Set car to Busy. So, this car will not be available for the next customer until the end date.
         /// </summary>
         /// <param name="reservation"></param>
-        internal void AddReservation(Reservations reservation) {
+        public void AddReservation(Reservations reservation) {
             string sqlExpression =
                 @"INSERT INTO Reservations (CarID, CustomerID, StartDate, 
                             EndDate, ReservStatsID, Location)

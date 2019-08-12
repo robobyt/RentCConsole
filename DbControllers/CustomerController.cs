@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RentCConsole.DbControllers {
-    class CustomerController {
+    class CustomerController : ICustomerController {
         private SqlConnection connection;
 
         public CustomerController(SqlConnection con) {
