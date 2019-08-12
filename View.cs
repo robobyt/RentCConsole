@@ -18,6 +18,7 @@ namespace RentCConsole.Views {
             reservationController = new ReservationController(connection);
         }
 
+        //TODO implement coupons
         // TODO : Add CheckAndClose method. When we try to find available car run this method
         //and check if Now > EndDate and Reservation is not closed or not cancelled then close it and set car available
 
@@ -33,13 +34,14 @@ namespace RentCConsole.Views {
 
             Console.WriteLine("Press ENTER to continue or ESC to quit");
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-
             while (true) {
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
                 if (keyInfo.Key == ConsoleKey.Enter)
                     MenuScreen();
                 else if (keyInfo.Key == ConsoleKey.Escape)
                     Environment.Exit(0);
+                else 
+                    continue;
             }
 
         }
@@ -205,14 +207,15 @@ namespace RentCConsole.Views {
         private Customers CustomerForm() {
             Console.Clear();
 
-            DateTime birthDate = DateTime.Now;
             string location = null;
 
-            Console.WriteLine("Enter Client Name");
-            string name = Console.ReadLine().ToString();
+            Console.WriteLine("Enter your full name in format 'John Smith':");
+            string name = Convert.ToString(Console.ReadLine());
+            name = Utility.CustomerNameValidate(name);
 
             Console.WriteLine("Enter Client Birthdate");
 
+            DateTime birthDate = Utility.InputAndValidatDateTime();
             birthDate = Utility.CheckIfClientIsAdult(birthDate);
 
             Console.WriteLine("Enter Client location code");
@@ -234,8 +237,6 @@ namespace RentCConsole.Views {
             Console.Clear();
             int customerId = 0;
             string location = null;
-            DateTime startDate = DateTime.Now;
-            DateTime endDate = DateTime.Now;
 
             CustomerIdToLocation(ref customerId, ref location);
 
@@ -243,11 +244,14 @@ namespace RentCConsole.Views {
 
             CheckIfCarAvailableAtLocation(ref carId, ref location);
 
+            Console.WriteLine("Enter Start date");
+            DateTime startDate = Utility.InputAndValidatDateTime();
             startDate = Utility.CheckIfCorrectDate(startDate);
 
             Console.WriteLine("Enter End date");
-            endDate = Utility.InputAndValidatDateTime();
-            startDate = Utility.CheckIfEndDateIsCorrect(startDate, endDate);
+            DateTime endDate = Utility.InputAndValidatDateTime();
+
+            Utility.CheckIfEndDateIsCorrect(ref startDate, ref endDate);
 
             Reservations reservation = new Reservations {
                 CustomerID = customerId,

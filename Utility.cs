@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RentCConsole {
@@ -22,33 +23,43 @@ namespace RentCConsole {
             return number;
         }
 
+        public static string CustomerNameValidate(string name) {
+            Regex regex = new Regex(@"[A-Z][a-z]+\s[A-Z][a-z]+");
+            while (!regex.IsMatch(name)) {
+                Console.WriteLine("Enter your full  name in format 'John Smith':");
+                name = Convert.ToString(Console.ReadLine());
+                if (string.IsNullOrEmpty(name)){
+                    Console.WriteLine("Name field can't be empty");
+                    continue;
+                    }
+                }
+            return name;
+        }
+
         //TODO Use TimeSpan
-        public static DateTime CheckIfEndDateIsCorrect(DateTime startDate, DateTime endDate) {
-            while (endDate < startDate) {
+        public static void  CheckIfEndDateIsCorrect(ref DateTime startDate, ref DateTime endDate) {
+            while (DateTime.Compare(endDate, startDate) < 0) {
                 Console.WriteLine("End date can't be earlier then start date. Input start date:");
                 startDate = InputAndValidatDateTime();
                 Console.WriteLine("Input end date:");
                 endDate = InputAndValidatDateTime();
             }
-
-            return startDate;
         }
 
         public static DateTime CheckIfClientIsAdult(DateTime birthDate) {
-            while (DateTime.Now.Year - birthDate.Year < 18) {
+            while (DateTime.Now.Day > birthDate.AddYears(18).Day) {
+                Console.WriteLine("Client has to be turn 18 yars. Enter Client Birthdate");
                 birthDate = Utility.InputAndValidatDateTime();
-                Console.WriteLine("Client has to be turn 18 yars");
             }
 
             return birthDate;
         }
 
         public static DateTime CheckIfCorrectDate(DateTime startDate) {
-            while (startDate < DateTime.Now) {
+            while (startDate.Day < DateTime.Now.Day) {
                 Console.WriteLine("Please, set date not earlier then today");
                 startDate = Utility.InputAndValidatDateTime();
             }
-
             return startDate;
         }
 
