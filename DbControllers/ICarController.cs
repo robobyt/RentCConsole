@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RentCConsole.DbControllers {
-    interface ICarController {
+    public interface ICarController {
         List<string[]> CarsList();
         int FindCarByPlate(string plateNumber);
         bool FindAvailableCar(int carId, string location);

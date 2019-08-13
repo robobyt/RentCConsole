@@ -132,7 +132,6 @@ namespace RentCConsole {
                     formattedTable.Append(String.Format("{0}{1}", BOTTOM_JOINT, String.Empty.PadLeft(maximumCellWidths[i], HORIZONTAL_LINE)));
             }
 
-            Console.WriteLine(formattedTable.ToString());
             return formattedTable.ToString();
         }
     }

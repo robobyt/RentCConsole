@@ -1,6 +1,7 @@
 ﻿using RentCConsole.DbControllers;
 using RentCConsole.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace RentCConsole.Views {
@@ -100,21 +101,41 @@ namespace RentCConsole.Views {
             }
         }
 
+        /// <summary>
+        /// We open client for web service that consumes data from database with the available cars
+        /// </summary>
         private void ListCars() {
             Console.Clear();
-            TablePrinter.GetDataInTableFormat(carController.CarsList());
+            List<string[]> cars = new List<string[]>();
+
+            var client = new RentWebService.CarListSoapClient();
+            var arr = client.Cars();
+            client.Close();
+
+            foreach (var item in arr) {
+                string[] row = new string[item.Count];
+                for (int i = 0; i < item.Count; i++) {
+                    row[i] = item[i]; 
+                }
+                cars.Add(row);
+            }
+
+            var table = TablePrinter.GetDataInTableFormat(cars);
+            Console.WriteLine(table);
             GoToMainMenu();
         }
 
         private void CustomerList() {
             Console.Clear();
-            TablePrinter.GetDataInTableFormat(customerController.CustomerList());
+            var table = TablePrinter.GetDataInTableFormat(customerController.CustomerList());
+            Console.WriteLine(table);
             GoToMainMenu();
         }
 
         private void ListReservations() {
             Console.Clear();
-            TablePrinter.GetDataInTableFormat(reservationController.ReservationsList());
+            var table = TablePrinter.GetDataInTableFormat(reservationController.ReservationsList());
+            Console.WriteLine(table);
             GoToMainMenu();
         }
 

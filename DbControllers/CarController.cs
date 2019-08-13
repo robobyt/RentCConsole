@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RentCConsole.DbControllers {
-    class CarController : ICarController{
+    public class CarController : ICarController{
         private SqlConnection connection;
 
-        internal CarController(SqlConnection con) {
+        public CarController(SqlConnection con) {
             connection = con;
         }
 

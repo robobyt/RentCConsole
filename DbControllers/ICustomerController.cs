@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RentCConsole.DbControllers {
-    interface ICustomerController {
+    public interface ICustomerController {
         List<string[]> CustomerList();
         void AddCustomer(Customers customer);
         void UpdateCustomer(Customers customer, int customerID);

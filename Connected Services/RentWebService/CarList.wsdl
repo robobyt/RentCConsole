@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://RentC.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://RentC.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://RentC.org/">
+      <s:element name="Cars">
+        <s:complexType />
+      </s:element>
+      <s:element name="CarsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CarsResult" type="tns:ArrayOfArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfString" nillable="true" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CarsSoapIn">
+    <wsdl:part name="parameters" element="tns:Cars" />
+  </wsdl:message>
+  <wsdl:message name="CarsSoapOut">
+    <wsdl:part name="parameters" element="tns:CarsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="CarListSoap">
+    <wsdl:operation name="Cars">
+      <wsdl:input message="tns:CarsSoapIn" />
+      <wsdl:output message="tns:CarsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CarListSoap" type="tns:CarListSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Cars">
+      <soap:operation soapAction="http://RentC.org/Cars" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="CarListSoap12" type="tns:CarListSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Cars">
+      <soap12:operation soapAction="http://RentC.org/Cars" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CarList">
+    <wsdl:port name="CarListSoap" binding="tns:CarListSoap">
+      <soap:address location="http://localhost:55229/CarList.asmx" />
+    </wsdl:port>
+    <wsdl:port name="CarListSoap12" binding="tns:CarListSoap12">
+      <soap12:address location="http://localhost:55229/CarList.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
