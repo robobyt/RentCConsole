@@ -12,5 +12,6 @@ namespace RentCConsole.DbControllers {
         void UpdateCustomer(Customers customer, int customerID);
         string FindCustomerLocationById(int customerID);
         bool FindCustomerById(int customerID);
+        List<string[]> GoldAndSilverCustomers(int count);
     }
 }

@@ -120,5 +120,71 @@ namespace RentCConsole.DbControllers {
                 return true;
             }
         }
+       
+        public List<string[]> MostRentedCarsByMonth(int OrderBy) {
+            List<string[]> cars = new List<string[]>();
+
+            string sqlExpression =
+                 @"SELECT COUNT(*), C.CarID, C.Plate, C.Manufacturer, C.Model, C.PricePerDay, C.Location 
+                    FROM Cars AS C JOIN Reservations AS R 
+                    ON R.CarID = C.CarID
+                    WHERE R.StartDate >= @Month
+                    GROUP BY C.CarID, C.Plate, C.Manufacturer, C.Model, C.PricePerDay, C.Location
+                    ORDER BY 
+                    CASE WHEN @OrderBy = 0
+                    THEN COUNT(*) END ASC,
+                    CASE when @OrderBy = 1
+                    THEN COUNT(*) END DESC";
+            using (SqlCommand cmd = new SqlCommand(sqlExpression, connection)) {
+                cmd.Parameters.AddWithValue("@Month", DateTime.Now.AddMonths(-1));
+                cmd.Parameters.AddWithValue("@OrderBy", OrderBy);
+                connection.Open();
+                cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (SqlDataReader reader = cmd.ExecuteReader()) {
+                    cars.Add(new string[] { "Ordered times:", "CarID:", "Plate:", "Manufacturer:", "Model:", "PricePerDay:", "Location:"});
+                    while (reader.Read()) {
+                        string[] row = new string[reader.FieldCount];
+                        for (int i = 0; i < row.Length; i++) {
+                            row[i] = reader[i].ToString();
+                        }
+                        cars.Add(row);
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+            }
+            return cars;
+
+        }
+
+        public List<string[]> TenMostRecentCars() {
+            List<string[]> cars = new List<string[]>();
+
+            string sqlExpression =
+                @"SELECT TOP 10 C.CarID, C.Plate, C.Manufacturer, C.Model, C.PricePerDay, C.Location,
+                    R.StartDate, R.EndDate
+                    FROM Cars AS C JOIN Reservations AS R 
+                    ON R.CarID = C.CarID
+                    WHERE R.StartDate >= @Month";
+            using (SqlCommand cmd = new SqlCommand(sqlExpression, connection)) {
+                cmd.Parameters.AddWithValue("@Month", DateTime.Now.AddMonths(-1));
+                connection.Open();
+                cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (SqlDataReader reader = cmd.ExecuteReader()) {
+                    cars.Add(new string[] { "CarID:", "Plate:", "Manufacturer:", "Model:", "PricePerDay:", "Location:", "StartDate:", "EndDate:" });
+                    while (reader.Read()) {
+                        string[] row = new string[reader.FieldCount];
+                        for (int i = 0; i < row.Length; i++) {
+                            row[i] = reader[i].ToString();
+                        }
+                        cars.Add(row);
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+            }
+            return cars;
+
+        }
     }
 }

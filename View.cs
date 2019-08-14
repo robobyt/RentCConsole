@@ -64,7 +64,10 @@ namespace RentCConsole.Views {
                         GoToMainMenu();
                         break;
                     case "3":
-                        ListReservations();
+                        var table = TablePrinter.GetDataInTableFormat(controller.GoldAndSilverCustomers(2));
+                        Console.WriteLine(table);
+                        
+                        //ListReservations();
                         break;
                     case "4":
                         CarsList();

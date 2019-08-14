@@ -22,6 +22,18 @@ namespace RentCConsole {
             reservationController = new ReservationController(connection);
         }
 
+        public List<string[]> GoldAndSilverCustomers(int count) {
+            return customerController.GoldAndSilverCustomers(count);
+        }
+
+        public List<string[]> MostRentedCars(int OrderBy) {
+            return carController.MostRentedCarsByMonth(OrderBy);
+        }
+
+        public List<string[]> MostRecentCars() {
+            return carController.TenMostRecentCars();
+        }
+
         public List<string[]> ReservationsList(int number) {
             return reservationController.ReservationsList(number);
         }

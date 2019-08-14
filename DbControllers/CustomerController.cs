@@ -149,5 +149,39 @@ namespace RentCConsole.DbControllers {
                 return (string)customerLocation;
             }
         }
+
+        public List<string[]> GoldAndSilverCustomers(int count) {
+            List<string[]> cars = new List<string[]>();
+
+            string sqlExpression =
+                @"SELECT COUNT(*), C.CustomerID, C.Name, C.BirthDate, C.Location
+                    FROM Customers AS C JOIN Reservations AS R 
+                    ON R.CustomerID = C.CustomerID
+                    WHERE R.StartDate >= @Month
+                    GROUP BY C.CustomerID, C.Name, C.BirthDate, C.Location
+                    HAVING COUNT(R.CustomerId) >= @Count
+                    ORDER BY COUNT(*) DESC";
+            using (SqlCommand cmd = new SqlCommand(sqlExpression, connection)) {
+                cmd.Parameters.AddWithValue("@Month", DateTime.Now.AddMonths(-1));
+                cmd.Parameters.AddWithValue("@Count", count);
+
+                connection.Open();
+                cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (SqlDataReader reader = cmd.ExecuteReader()) {
+                    cars.Add(new string[] { "Ordered times:", "CustomerID:", "Name:", "BirthDate:", "Location:"});
+                    while (reader.Read()) {
+                        string[] row = new string[reader.FieldCount];
+                        for (int i = 0; i < row.Length; i++) {
+                            row[i] = reader[i].ToString();
+                        }
+                        cars.Add(row);
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+            }
+            return cars;
+
+        }
     }
 }

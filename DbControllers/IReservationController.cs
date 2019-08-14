@@ -13,6 +13,5 @@ namespace RentCConsole.DbControllers {
         void UpdateReservation(Reservations reservation, int oldCustomerID, int oldCarID, DateTime oldStartDate);
         void CancelReservation(int CustomerID, int CarID, DateTime StartDate);
         void AddReservation(Reservations reservation);
-
     }
 }

@@ -128,7 +128,7 @@ namespace RentCConsole.DbControllers {
                 //Console.WriteLine("Reservation was updated");
             }
 
-            if(oldCarID == reservation.CarID) {
+            if (oldCarID == reservation.CarID) {
                 connection.Close();
                 return;
             }
@@ -220,5 +220,6 @@ namespace RentCConsole.DbControllers {
                 connection.Close();
             }
         }
+
     }
 }
