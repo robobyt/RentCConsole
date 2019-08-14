@@ -136,9 +136,10 @@ namespace RentCConsole.DbControllers {
             string secondExpression =
                  @"UPDATE Cars SET Cars.IsBusy=@IsBusy WHERE CarID=@oldCarID";
             using (SqlCommand cmd = new SqlCommand(secondExpression, connection)) {
+                cmd.Parameters.AddWithValue("@oldCarID", oldCarID);
                 cmd.Parameters.AddWithValue("@IsBusy", false);
                 cmd.ExecuteNonQuery();
-                //Console.WriteLine("{0} Car with ID is available now", oldCarID);
+                Console.WriteLine("{0} Car with ID is available now", oldCarID);
             }
 
             string thirdExpression =
@@ -147,7 +148,7 @@ namespace RentCConsole.DbControllers {
                 cmd.Parameters.AddWithValue("@CarID", reservation.CarID);
                 cmd.Parameters.AddWithValue("@IsBusy", true);
                 cmd.ExecuteNonQuery();
-                //Console.WriteLine("{0} Car with ID is reserved", reservation.CarID);
+                Console.WriteLine("{0} Car with ID is reserved", reservation.CarID);
                 connection.Close();
             }
 

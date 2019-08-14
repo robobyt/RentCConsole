@@ -71,10 +71,8 @@ namespace RentCConsole {
                 CustomerIdToLocation(ref customerId, ref location);
                 carId = CarPlateToCarId();
 
-                do {
-                    Console.WriteLine("Enter Start date");
-                    startDate = Utility.InputAndValidatDateTime();
-                } while (!Utility.CheckIfCorrectDate(startDate));
+                Console.WriteLine("Enter your reservation start date");
+                startDate = Utility.InputAndValidatDateTime();
 
                 checkReservExist = reservationController.FindReservationByKeys(customerId, carId, startDate);
             }

@@ -63,9 +63,6 @@ namespace RentCConsole {
 
              do{
                 Console.WriteLine("Enter End date");
-                startDate = Utility.InputAndValidatDateTime();
-
-                Console.WriteLine("Input end date:");
                 endDate = Utility.InputAndValidatDateTime();
             } while (!Utility.CheckIfEndDateIsCorrect(startDate, endDate)) ;
 
