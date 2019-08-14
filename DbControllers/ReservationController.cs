@@ -18,14 +18,36 @@ namespace RentCConsole.DbControllers {
         /// <summary>
         /// Returns List of string arrays of all reservations 
         /// </summary>
-        public List<string[]> ReservationsList() {
+        public List<string[]> ReservationsList(int OrderBy) {
             List<string[]> reservations = new List<string[]>();
 
             string sqlExpression =
-                "SELECT Cars.Plate, Reservations.CustomerID, Reservations.StartDate, " +
-                "Reservations.EndDate, Reservations.Location" +
-                " FROM Reservations JOIN Cars ON Reservations.CarID = Cars.CarID";
+                @"SELECT Cars.Plate, Reservations.CustomerID, Reservations.StartDate,  
+                Reservations.EndDate, Reservations.Location 
+                FROM Reservations JOIN Cars ON Reservations.CarID = Cars.CarID
+                  ORDER BY 
+                    CASE WHEN @OrderBy = 0
+                    THEN Cars.Plate END ASC,
+                    CASE when @OrderBy = 1
+                    THEN Cars.Plate END DESC,
+                    CASE WHEN @OrderBy = 2
+                    THEN Reservations.CustomerID END ASC,
+                    CASE WHEN @OrderBy = 3
+                    THEN Reservations.CustomerID END DESC,
+                    CASE WHEN @OrderBy = 4
+                    THEN Reservations.StartDate END ASC,
+                    CASE WHEN @OrderBy = 5
+                    THEN Reservations.StartDate END DESC,
+                    CASE WHEN @OrderBy = 6
+                    THEN Reservations.EndDate END ASC,
+                    CASE WHEN @OrderBy = 7
+                    THEN Reservations.EndDate END DESC,
+                    CASE WHEN @OrderBy = 8
+                    THEN Reservations.Location END ASC,
+                    CASE WHEN @OrderBy = 9
+                    THEN Reservations.Location END DESC";
             using (SqlCommand cmd = new SqlCommand(sqlExpression, connection)) {
+                cmd.Parameters.AddWithValue("@OrderBy", OrderBy);
                 connection.Open();
                 cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (SqlDataReader reader = cmd.ExecuteReader()) {
@@ -68,13 +90,10 @@ namespace RentCConsole.DbControllers {
                 connection.Close();
 
                 if (reservationPK > 0) {
-                    Console.WriteLine("Reservation with ID {0} exist. You can update data", reservationPK);
+                    //Console.WriteLine("Reservation with ID {0} exist. You can update data", reservationPK);
                     return true;
                 }
-                else {
-                    Console.WriteLine("Reservation with ID {0} doesn't exist.", reservationPK);
-                    return false;
-                }
+                return false;
             }
         }
 
@@ -106,7 +125,7 @@ namespace RentCConsole.DbControllers {
 
                 connection.Open();
                 cmd.ExecuteNonQuery();
-                Console.WriteLine("Reservation was updated");
+                //Console.WriteLine("Reservation was updated");
             }
 
             if(oldCarID == reservation.CarID) {
@@ -119,7 +138,7 @@ namespace RentCConsole.DbControllers {
             using (SqlCommand cmd = new SqlCommand(secondExpression, connection)) {
                 cmd.Parameters.AddWithValue("@IsBusy", false);
                 cmd.ExecuteNonQuery();
-                Console.WriteLine("{0} Car with ID is available now", oldCarID);
+                //Console.WriteLine("{0} Car with ID is available now", oldCarID);
             }
 
             string thirdExpression =
@@ -128,7 +147,7 @@ namespace RentCConsole.DbControllers {
                 cmd.Parameters.AddWithValue("@CarID", reservation.CarID);
                 cmd.Parameters.AddWithValue("@IsBusy", true);
                 cmd.ExecuteNonQuery();
-                Console.WriteLine("{0} Car with ID is reserved", reservation.CarID);
+                //Console.WriteLine("{0} Car with ID is reserved", reservation.CarID);
                 connection.Close();
             }
 

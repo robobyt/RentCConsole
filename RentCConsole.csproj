@@ -48,11 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CarWebService.cs" />
     <Compile Include="Connected Services\RentWebService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="FormController.cs" />
+    <Compile Include="Forms.cs" />
     <Compile Include="DbControllers\CarController.cs" />
     <Compile Include="DbControllers\CustomerController.cs" />
     <Compile Include="DbControllers\ICarController.cs" />
@@ -74,7 +77,6 @@
     <Compile Include="Models\Roles.cs" />
     <Compile Include="Models\RolesPermissions.cs" />
     <Compile Include="Models\Users.cs" />
-    <Compile Include="Process.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
@@ -84,6 +86,9 @@
     <None Include="App.config" />
     <None Include="Connected Services\RentWebService\CarList.wsdl" />
     <None Include="Connected Services\RentWebService\RentCConsole.RentWebService.ArrayOfString.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\RentWebService\RentCConsole.RentWebService.CarsDefaultResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Connected Services\RentWebService\RentCConsole.RentWebService.CarsResponse.datasource">

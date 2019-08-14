@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RentCConsole.DbControllers {
     interface IReservationController {
-        List<string[]> ReservationsList();
+        List<string[]> ReservationsList(int OrderBy);
         void CloseReservation();
         bool FindReservationByKeys(int CustomerId, int CarId, DateTime startDate);
         void UpdateReservation(Reservations reservation, int oldCustomerID, int oldCarID, DateTime oldStartDate);

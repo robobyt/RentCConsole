@@ -21,8 +21,8 @@ namespace RentCConsole.RentWebService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://RentC.org/", ConfigurationName="RentWebService.CarListSoap")]
-    public interface CarListSoap {
+    [System.ServiceModel.ServiceContractAttribute(Name="RentC Web ServiceSoap", Namespace="http://RentC.org/", ConfigurationName="RentWebService.RentCWebServiceSoap")]
+    public interface RentCWebServiceSoap {
         
         // CODEGEN: Generating message contract since element name CarsResult from namespace http://RentC.org/ is not marked nillable
         [System.ServiceModel.OperationContractAttribute(Action="http://RentC.org/Cars", ReplyAction="*")]
@@ -30,6 +30,13 @@ namespace RentCConsole.RentWebService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://RentC.org/Cars", ReplyAction="*")]
         System.Threading.Tasks.Task<RentCConsole.RentWebService.CarsResponse> CarsAsync(RentCConsole.RentWebService.CarsRequest request);
+        
+        // CODEGEN: Generating message contract since element name CarsDefaultResult from namespace http://RentC.org/ is not marked nillable
+        [System.ServiceModel.OperationContractAttribute(Action="http://RentC.org/CarsDefault", ReplyAction="*")]
+        RentCConsole.RentWebService.CarsDefaultResponse CarsDefault(RentCConsole.RentWebService.CarsDefaultRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://RentC.org/CarsDefault", ReplyAction="*")]
+        System.Threading.Tasks.Task<RentCConsole.RentWebService.CarsDefaultResponse> CarsDefaultAsync(RentCConsole.RentWebService.CarsDefaultRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -52,10 +59,17 @@ namespace RentCConsole.RentWebService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.Runtime.Serialization.DataContractAttribute()]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://RentC.org/")]
     public partial class CarsRequestBody {
         
+        [System.Runtime.Serialization.DataMemberAttribute(Order=0)]
+        public int OrderBy;
+        
         public CarsRequestBody() {
+        }
+        
+        public CarsRequestBody(int OrderBy) {
+            this.OrderBy = OrderBy;
         }
     }
     
@@ -93,54 +107,140 @@ namespace RentCConsole.RentWebService {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface CarListSoapChannel : RentCConsole.RentWebService.CarListSoap, System.ServiceModel.IClientChannel {
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class CarsDefaultRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="CarsDefault", Namespace="http://RentC.org/", Order=0)]
+        public RentCConsole.RentWebService.CarsDefaultRequestBody Body;
+        
+        public CarsDefaultRequest() {
+        }
+        
+        public CarsDefaultRequest(RentCConsole.RentWebService.CarsDefaultRequestBody Body) {
+            this.Body = Body;
+        }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class CarListSoapClient : System.ServiceModel.ClientBase<RentCConsole.RentWebService.CarListSoap>, RentCConsole.RentWebService.CarListSoap {
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute()]
+    public partial class CarsDefaultRequestBody {
         
-        public CarListSoapClient() {
+        public CarsDefaultRequestBody() {
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class CarsDefaultResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="CarsDefaultResponse", Namespace="http://RentC.org/", Order=0)]
+        public RentCConsole.RentWebService.CarsDefaultResponseBody Body;
+        
+        public CarsDefaultResponse() {
         }
         
-        public CarListSoapClient(string endpointConfigurationName) : 
+        public CarsDefaultResponse(RentCConsole.RentWebService.CarsDefaultResponseBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://RentC.org/")]
+    public partial class CarsDefaultResponseBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public RentCConsole.RentWebService.ArrayOfString[] CarsDefaultResult;
+        
+        public CarsDefaultResponseBody() {
+        }
+        
+        public CarsDefaultResponseBody(RentCConsole.RentWebService.ArrayOfString[] CarsDefaultResult) {
+            this.CarsDefaultResult = CarsDefaultResult;
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface RentCWebServiceSoapChannel : RentCConsole.RentWebService.RentCWebServiceSoap, System.ServiceModel.IClientChannel {
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class RentCWebServiceSoapClient : System.ServiceModel.ClientBase<RentCConsole.RentWebService.RentCWebServiceSoap>, RentCConsole.RentWebService.RentCWebServiceSoap {
+        
+        public RentCWebServiceSoapClient() {
+        }
+        
+        public RentCWebServiceSoapClient(string endpointConfigurationName) : 
                 base(endpointConfigurationName) {
         }
         
-        public CarListSoapClient(string endpointConfigurationName, string remoteAddress) : 
+        public RentCWebServiceSoapClient(string endpointConfigurationName, string remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public CarListSoapClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public RentCWebServiceSoapClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public CarListSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public RentCWebServiceSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        RentCConsole.RentWebService.CarsResponse RentCConsole.RentWebService.CarListSoap.Cars(RentCConsole.RentWebService.CarsRequest request) {
+        RentCConsole.RentWebService.CarsResponse RentCConsole.RentWebService.RentCWebServiceSoap.Cars(RentCConsole.RentWebService.CarsRequest request) {
             return base.Channel.Cars(request);
         }
         
-        public RentCConsole.RentWebService.ArrayOfString[] Cars() {
+        public RentCConsole.RentWebService.ArrayOfString[] Cars(int OrderBy) {
             RentCConsole.RentWebService.CarsRequest inValue = new RentCConsole.RentWebService.CarsRequest();
             inValue.Body = new RentCConsole.RentWebService.CarsRequestBody();
-            RentCConsole.RentWebService.CarsResponse retVal = ((RentCConsole.RentWebService.CarListSoap)(this)).Cars(inValue);
+            inValue.Body.OrderBy = OrderBy;
+            RentCConsole.RentWebService.CarsResponse retVal = ((RentCConsole.RentWebService.RentCWebServiceSoap)(this)).Cars(inValue);
             return retVal.Body.CarsResult;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<RentCConsole.RentWebService.CarsResponse> RentCConsole.RentWebService.CarListSoap.CarsAsync(RentCConsole.RentWebService.CarsRequest request) {
+        System.Threading.Tasks.Task<RentCConsole.RentWebService.CarsResponse> RentCConsole.RentWebService.RentCWebServiceSoap.CarsAsync(RentCConsole.RentWebService.CarsRequest request) {
             return base.Channel.CarsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<RentCConsole.RentWebService.CarsResponse> CarsAsync() {
+        public System.Threading.Tasks.Task<RentCConsole.RentWebService.CarsResponse> CarsAsync(int OrderBy) {
             RentCConsole.RentWebService.CarsRequest inValue = new RentCConsole.RentWebService.CarsRequest();
             inValue.Body = new RentCConsole.RentWebService.CarsRequestBody();
-            return ((RentCConsole.RentWebService.CarListSoap)(this)).CarsAsync(inValue);
+            inValue.Body.OrderBy = OrderBy;
+            return ((RentCConsole.RentWebService.RentCWebServiceSoap)(this)).CarsAsync(inValue);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        RentCConsole.RentWebService.CarsDefaultResponse RentCConsole.RentWebService.RentCWebServiceSoap.CarsDefault(RentCConsole.RentWebService.CarsDefaultRequest request) {
+            return base.Channel.CarsDefault(request);
+        }
+        
+        public RentCConsole.RentWebService.ArrayOfString[] CarsDefault() {
+            RentCConsole.RentWebService.CarsDefaultRequest inValue = new RentCConsole.RentWebService.CarsDefaultRequest();
+            inValue.Body = new RentCConsole.RentWebService.CarsDefaultRequestBody();
+            RentCConsole.RentWebService.CarsDefaultResponse retVal = ((RentCConsole.RentWebService.RentCWebServiceSoap)(this)).CarsDefault(inValue);
+            return retVal.Body.CarsDefaultResult;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<RentCConsole.RentWebService.CarsDefaultResponse> RentCConsole.RentWebService.RentCWebServiceSoap.CarsDefaultAsync(RentCConsole.RentWebService.CarsDefaultRequest request) {
+            return base.Channel.CarsDefaultAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<RentCConsole.RentWebService.CarsDefaultResponse> CarsDefaultAsync() {
+            RentCConsole.RentWebService.CarsDefaultRequest inValue = new RentCConsole.RentWebService.CarsDefaultRequest();
+            inValue.Body = new RentCConsole.RentWebService.CarsDefaultRequestBody();
+            return ((RentCConsole.RentWebService.RentCWebServiceSoap)(this)).CarsDefaultAsync(inValue);
         }
     }
 }

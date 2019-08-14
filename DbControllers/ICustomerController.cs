@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RentCConsole.DbControllers {
     public interface ICustomerController {
-        List<string[]> CustomerList();
+        List<string[]> CustomerList(int parameter);
         void AddCustomer(Customers customer);
         void UpdateCustomer(Customers customer, int customerID);
         string FindCustomerLocationById(int customerID);

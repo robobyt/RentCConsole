@@ -18,11 +18,33 @@ namespace RentCConsole.DbControllers {
         /// <summary>
         /// Returns List of string arrays of all customers
         /// </summary>
-        public List<string[]> CustomerList() {
+        public List<string[]> CustomerList(int OrderBy) {
+
             List<string[]> customers = new List<string[]>();
-            using (SqlCommand cmd = new SqlCommand("SELECT CustomerID, Name, BirthDate, Location FROM Customers", connection)) {
+            string sqlExpression =
+                @"SELECT CustomerID, Name, BirthDate, Location FROM Customers 
+                  ORDER BY 
+                    CASE WHEN @OrderBy = 0
+                    THEN CustomerID END ASC,
+                    CASE when @OrderBy = 1
+                    THEN CustomerID END DESC,
+                    CASE WHEN @OrderBy = 2
+                    THEN Name END ASC,
+                    CASE WHEN @OrderBy = 3
+                    THEN Name END DESC,
+                    CASE WHEN @OrderBy = 4
+                    THEN BirthDate END ASC,
+                    CASE WHEN @OrderBy = 5
+                    THEN BirthDate END DESC,
+                    CASE WHEN @OrderBy = 6
+                    THEN Location END ASC,
+                    CASE WHEN @OrderBy = 7
+                    THEN Location END DESC";
+            using (SqlCommand cmd = new SqlCommand(sqlExpression, connection)) {
+                cmd.Parameters.AddWithValue("@OrderBy", OrderBy);
                 connection.Open();
                 cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
                 using (SqlDataReader reader = cmd.ExecuteReader()) {
                     customers.Add(new string[] { "CustomerID:", "Name:", "BirthDate:", "Location:" });
                     while (reader.Read()) {
@@ -55,7 +77,7 @@ namespace RentCConsole.DbControllers {
 
                 connection.Open();
                 int number = cmd.ExecuteNonQuery();
-                Console.WriteLine("{0} Customers was added: ", number);
+                //Console.WriteLine("{0} Customers was added: ", number);
                 connection.Close();
             }
        
@@ -78,7 +100,7 @@ namespace RentCConsole.DbControllers {
 
                 connection.Open();
                 int number = cmd.ExecuteNonQuery();
-                Console.WriteLine("{0} Customers was updated", number);
+                //Console.WriteLine("{0} Customers was updated", number);
                 connection.Close();
             }
 
@@ -98,10 +120,10 @@ namespace RentCConsole.DbControllers {
                 connection.Close();
 
                 if (customerExist > 0) {
-                    Console.WriteLine("Customer with ID {0} exist. You can update data", customerID);
+                    //Console.WriteLine("Customer with ID {0} exist. You can update data", customerID);
                     return true;
                 }
-                Console.WriteLine("Customer with ID {0} doesn't exist.", customerID);
+                //Console.WriteLine("Customer with ID {0} doesn't exist.", customerID);
                 return false;
             }
         }
@@ -120,10 +142,10 @@ namespace RentCConsole.DbControllers {
                 connection.Close();
 
                 if (customerLocation == null) {
-                    Console.WriteLine("Customer with ID {0} doesn't exist.", customerID);
+                    //Console.WriteLine("Customer with ID {0} doesn't exist.", customerID);
                     return null;
                 }
-                Console.WriteLine("Customer with ID {0} exist. You can update data", customerID);
+                //Console.WriteLine("Customer with ID {0} exist. You can update data", customerID);
                 return (string)customerLocation;
             }
         }

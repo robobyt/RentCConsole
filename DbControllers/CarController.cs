@@ -17,15 +17,44 @@ namespace RentCConsole.DbControllers {
         /// <summary>
         /// Returns List of string arrays of all available cars. It means all cars those were not booked
         /// </summary>
-        public List<string[]> CarsList() {
+        public List<string[]> CarsList(int OrderBy) {
             List<string[]> cars = new List<string[]>();
 
-            using (SqlCommand cmd = new SqlCommand("SELECT CarID, Plate, Manufacturer, Model, PricePerDay FROM Cars WHERE IsBusy = 0", connection)) {
+            string sqlExpression =
+                @"SELECT CarID, Plate, Manufacturer, Model, PricePerDay, Location FROM Cars WHERE IsBusy = 0
+                  ORDER BY 
+                    CASE WHEN @OrderBy = 0
+                    THEN CarID END ASC,
+                    CASE when @OrderBy = 1
+                    THEN CarID END DESC,
+                    CASE WHEN @OrderBy = 2
+                    THEN Plate END ASC,
+                    CASE WHEN @OrderBy = 3
+                    THEN Plate END DESC,
+                    CASE WHEN @OrderBy = 4
+                    THEN Manufacturer END ASC,
+                    CASE WHEN @OrderBy = 5
+                    THEN Manufacturer END DESC,
+                    CASE WHEN @OrderBy = 6
+                    THEN Model END ASC,
+                    CASE WHEN @OrderBy = 7
+                    THEN Model END DESC,
+                    CASE WHEN @OrderBy = 8
+                    THEN PricePerDay END ASC,
+                    CASE WHEN @OrderBy = 9
+                    THEN PricePerDay END DESC,
+                    CASE WHEN @OrderBy = 10
+                    THEN Location END ASC,
+                    CASE WHEN @OrderBy = 11
+                    THEN Location END DESC";
+
+            using (SqlCommand cmd = new SqlCommand(sqlExpression, connection)) {
+                cmd.Parameters.AddWithValue("@OrderBy", OrderBy);
                 connection.Open();
                 cmd.Transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (SqlDataReader reader = cmd.ExecuteReader()) {
 
-                    cars.Add(new string[] { "CarID:", "Plate:", "Manufacturer:", " Model:", "PricePerDay:" });
+                    cars.Add(new string[] { "CarID:", "Plate:", "Manufacturer:", " Model:", "PricePerDay:", "Location:" });
                     while (reader.Read()) {
                         string[] row = new string[reader.FieldCount];
                         for (int i = 0; i < row.Length; i++) {
@@ -54,11 +83,11 @@ namespace RentCConsole.DbControllers {
                 connection.Close();
 
                 if (carID == null) {
-                    Console.WriteLine("Car with plate number {0} doesn't exist.", plateNumber);
+                    //Console.WriteLine("Car with plate number {0} doesn't exist.", plateNumber);
                     return 0;
                 }
                 else
-                    Console.WriteLine("Car with plate number {0} exist.", plateNumber);
+                    //Console.WriteLine("Car with plate number {0} exist.", plateNumber);
 
                 return (int)carID;
             }
@@ -83,11 +112,10 @@ namespace RentCConsole.DbControllers {
                 connection.Close();
 
                 if (carID == null || (int)carID == 0) {
-                    Console.WriteLine("There isn't available car in {0}.", location);
+                    //Console.WriteLine("There isn't available car in {0}.", location);
                     return false;
                 }
-                else
-                    Console.WriteLine("There is available car in {0}.", location);
+                //Console.WriteLine("There is available car in {0}.", location);
 
                 return true;
             }
