@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using RentCConsole.Models;
 using RentCConsole.Views;
+using System.Threading;
 
 namespace RentCConsole {
     class Program {
@@ -21,15 +22,17 @@ namespace RentCConsole {
 
             FormController controller = new FormController(connection);
             View view = new View(controller);
+
             view.Process();
 
         }
+
 
         public static void Settings() {
             Console.Title = "RentC";
             //Console.SetWindowSize(100, 100);
             //Console.SetBufferSize(100, 100);
-            Console.BackgroundColor = ConsoleColor.Cyan;
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.ForegroundColor = ConsoleColor.Black;
             Console.Clear();
         }

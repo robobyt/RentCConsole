@@ -48,9 +48,14 @@ namespace RentCConsole {
         /// <returns></returns>
         public int CarPlateToCarId() {
             Console.WriteLine("Enter Car plate number");
+
             string plate = Console.ReadLine().ToString();
-            int carId = CheckIfPlateExist(plate);
-            return carId;
+            while(!CheckIfPlateExist(ref plate)) {
+                Console.WriteLine("Enter Car plate number");
+                plate = Console.ReadLine().ToString();
+            }
+
+            return carController.FindCarByPlate(plate);
         }
 
         /// <summary>
@@ -59,9 +64,11 @@ namespace RentCConsole {
         /// </summary>
         /// <returns></returns>
         public void CustomerIdToLocation(ref int customerId, ref string location) {
-            Console.WriteLine("Enter Client ID");
-            customerId = Utility.InputAndValidatInt();
-            location = CheckIfCustomerExist(customerId);
+            customerId = CheckIfCustomerExist();
+            while (customerId < 1) {
+                customerId = CheckIfCustomerExist();
+            }
+            location = customerController.FindCustomerLocationById(customerId);
         }
 
         /// <summary>
@@ -76,9 +83,9 @@ namespace RentCConsole {
             string location = null;
 
             while (!checkReservExist) {
-                Console.WriteLine("Reservation with customer ID {0} " +
-                    "and start date {1} doesn't exist exist! Please, enter another data" +
-                    " presss ESC to back Main menu", customerId, startDate);
+                Utility.ErrorMessage($"Reservation with customer ID {customerId} " +
+                    "and start date {startDate} doesn't exist exist! Please, enter another data" +
+                    " presss ESC to back Main menu");
 
                 CustomerIdToLocation(ref customerId, ref location);
                 carId = CarPlateToCarId();
@@ -98,8 +105,8 @@ namespace RentCConsole {
         public void CheckIfCarAvailableAtLocation(ref int carId, ref string location) {
             bool checkReservExist = carController.FindAvailableCar(carId, location);
             while (!checkReservExist) {
-                Console.WriteLine("There are no cars in {0}! Please, enter another plate number " +
-                    "or presss ESC to back Main menu", location);
+                Utility.ErrorMessage($"There are no cars in {location}! Please, enter another plate number " +
+                    "or presss ESC to back Main menu");
                 carId = CarPlateToCarId();
                 checkReservExist = carController.FindAvailableCar(carId, location);
             }
@@ -110,59 +117,58 @@ namespace RentCConsole {
         /// </summary>
         /// <param name="plate"></param>
         /// <returns></returns>
-        public string CheckIfCustomerExist(int customerId) {
-            string location = customerController.FindCustomerLocationById(customerId);
-            while (location == null) {
-                Console.WriteLine("Customer with id: {0} doesn't exist", customerId);
-                Console.WriteLine("Try one more! To exit in main menu hit ESC");
-                customerId = Utility.InputAndValidatInt();
-                location = customerController.FindCustomerLocationById(customerId);
+        public int CheckIfCustomerExist() {
+            Console.WriteLine("Enter Client Id to update");
+            int customerId = Utility.InputAndValidatInt();
+
+            if(!customerController.FindCustomerById(customerId)){
+                Utility.ErrorMessage($"Customer with id: {customerId} doesn't exist");
+                Utility.WarningMessage("Try one more! To exit in main menu hit ESC");
+                return 0;
             };
-            return location;
+            return customerId;
         }
 
         /// <summary>
-        /// Chiking car plate inputs from customers. If it is correct returns car ID
+        /// Chiking car plate inputs from customers. If it is correct returns true
         /// </summary>
         /// <param name="plate"></param>
         /// <returns></returns>
-        public int CheckIfPlateExist(string plate) {
-            int car = carController.FindCarByPlate(plate);
-            while (car < 1) {
-                Console.WriteLine("Car with number: {0} doesn't exist", plate);
-                Console.WriteLine("Try one more! To exit in main menu hit ESC");
-                plate = Console.ReadLine().ToString();
-                car = carController.FindCarByPlate(plate);
+        public bool CheckIfPlateExist(ref string plate) {
+            if (carController.FindCarByPlate(plate) < 1) {
+                Utility.ErrorMessage($"Car with number: {plate} doesn't exist");
+                Utility.WarningMessage("Try one more! To exit in main menu hit ESC");
+                return false;
             }
-
-            return car;
+            return true;
         }
 
         public void AddCarReservation() {
             Console.Clear();
             reservationController.AddReservation(Forms.ReservationForm(this));
 
-            Console.WriteLine("New Reservation added successful");
+            Utility.SuccessMessage("New Reservation added successful");
         }
 
         public void AddCustomer() {
             Console.Clear();
             customerController.AddCustomer(Forms.CustomerForm());
+            Utility.SuccessMessage("Customer was added successful");
         }
 
         public void UpdateCustomer() {
             Console.Clear();
-
-            Console.WriteLine("Enter Client Id to update");
-            int id = Utility.InputAndValidatInt();
-
-            CheckIfCustomerExist(id);
+            int id = CheckIfCustomerExist();
+            while(id < 1) {
+                id = CheckIfCustomerExist();
+            }
 
             if (customerController.FindCustomerById(id)) {
                 customerController.UpdateCustomer(Forms.CustomerForm(), id);
+                Utility.SuccessMessage("Customer was updated successful");
             }
             else {
-                Console.WriteLine("Reservation was not updated");
+                Utility.ErrorMessage("Customer was not updated");
             }
 
         }
@@ -193,18 +199,21 @@ namespace RentCConsole {
 
             CheckIfReservationExist(ref customerId, ref carId, startDate);
 
-            Console.WriteLine("Press any key to change reservation");
+            Utility.SuccessMessage("Press any key to change reservation");
             Console.ReadKey();
 
-            Console.WriteLine("If you wnt to cancel reservation hit 1 otherwise any button");
+            Utility.WarningMessage("If you want to cancel reservation hit 1 otherwise any button");
             int cancel = Utility.InputAndValidatInt();
 
             if (cancel == 1) {
                 reservationController.CancelReservation(customerId, carId, startDate);
+                Utility.SuccessMessage("Reservation was cancelled");
+                return;
             }
 
             reservation = Forms.ReservationForm(this);
             reservationController.UpdateReservation(reservation, customerId, carId, startDate);
+            Utility.SuccessMessage("Reservation was updated successful");
 
         }
 

@@ -150,6 +150,7 @@ namespace RentCConsole.DbControllers {
             }
         }
 
+
         public List<string[]> GoldAndSilverCustomers(int count) {
             List<string[]> cars = new List<string[]>();
 
@@ -159,7 +160,7 @@ namespace RentCConsole.DbControllers {
                     ON R.CustomerID = C.CustomerID
                     WHERE R.StartDate >= @Month
                     GROUP BY C.CustomerID, C.Name, C.BirthDate, C.Location
-                    HAVING COUNT(R.CustomerId) >= @Count
+                    HAVING(COUNT(R.CustomerId) >= @Count )
                     ORDER BY COUNT(*) DESC";
             using (SqlCommand cmd = new SqlCommand(sqlExpression, connection)) {
                 cmd.Parameters.AddWithValue("@Month", DateTime.Now.AddMonths(-1));

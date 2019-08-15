@@ -49,7 +49,8 @@ namespace RentCConsole.Views {
             Console.WriteLine("5 Register new Customer");
             Console.WriteLine("6 Update Customer");
             Console.WriteLine("7 List Customers");
-            Console.WriteLine("8 Quit");
+            Console.WriteLine("8 Reports");
+            Console.WriteLine("9 Quit");
 
             while (true) {
                 var key = Console.ReadLine().ToString();
@@ -64,10 +65,8 @@ namespace RentCConsole.Views {
                         GoToMainMenu();
                         break;
                     case "3":
-                        var table = TablePrinter.GetDataInTableFormat(controller.GoldAndSilverCustomers(2));
-                        Console.WriteLine(table);
-                        
-                        //ListReservations();
+                        ListReservations();
+                        GoToMainMenu();
                         break;
                     case "4":
                         CarsList();
@@ -82,12 +81,63 @@ namespace RentCConsole.Views {
                         break;
                     case "7":
                         CustomerList();
+                        GoToMainMenu();
                         break;
                     case "8":
+                        Reports();
+                        break;
+                    case "9":
                         Environment.Exit(0);
                         break;
                     default:
                         Console.WriteLine("Please, choose 1-8 number");
+                        break;
+
+                }
+            }
+        }
+
+        private void Reports() {
+            Console.Clear();
+            Console.WriteLine("1 Report Gold and Silver Customers");
+            Console.WriteLine("2 Report most recent rented cars");
+            Console.WriteLine("3 Report most rented cars in a given month");
+            Console.WriteLine("4 Report less rented carts in a given month");
+            Console.WriteLine("5 Back to main menu");
+            Console.WriteLine("6 Main menu");
+
+            while (true) {
+                var key = Console.ReadLine().ToString();
+
+                switch (key) {
+                    case "1":
+                        var customers = TablePrinter.GetDataInTableFormat(controller.GoldAndSilverCustomers(2));
+                        Console.WriteLine(customers);
+                        BackToReports();
+                        break;
+                    case "2":
+                        var recentCars = TablePrinter.GetDataInTableFormat(controller.MostRecentCars());
+                        Console.WriteLine(recentCars);
+                        BackToReports();
+                        break;
+                    case "3":
+                        var mostRented = TablePrinter.GetDataInTableFormat(controller.MostRentedCars(1));
+                        Console.WriteLine(mostRented);
+                        BackToReports();
+                        break;
+                    case "4":
+                        var lessRented = TablePrinter.GetDataInTableFormat(controller.MostRentedCars(0));
+                        Console.WriteLine(lessRented);
+                        BackToReports();
+                        break;
+                    case "5":
+                        GoToMainMenu();
+                        break;
+                    case "6":
+                        GoToMainMenu();
+                        break;
+                    default:
+                        Console.WriteLine("Please, choose 1-5 number");
                         break;
 
                 }
@@ -115,7 +165,7 @@ namespace RentCConsole.Views {
                 Console.WriteLine("                                           4 - Model");
                 Console.WriteLine("                                           5 - Price Per Day");
                 Console.WriteLine("                                           6 - Location");
-                Console.WriteLine("                                           ESC to Main menu");
+                Console.WriteLine("                                           7 - to Main menu");
                 number = Utility.InputAndValidatInt();
 
                 switch (number) {
@@ -179,10 +229,12 @@ namespace RentCConsole.Views {
                             location = false;
                         }
                         break;
+                    case 7:
+                        GoToMainMenu();
+                        break;
                     default:
                         number = 0;
                         break;
-
                 }
 
             }
@@ -205,7 +257,7 @@ namespace RentCConsole.Views {
                 Console.WriteLine("                                           2 - Client name");
                 Console.WriteLine("                                           3 - Birth date");
                 Console.WriteLine("                                           4 - Location");
-                Console.WriteLine("                                           ESC to Main menu");
+                Console.WriteLine("                                           5 - to Main menu");
                 number = Utility.InputAndValidatInt();
 
                 switch (number) {
@@ -249,6 +301,9 @@ namespace RentCConsole.Views {
                             location = false;
                         }
                         break;
+                    case 5:
+                        GoToMainMenu();
+                        break;
                     default:
                         number = 0;
                         break;
@@ -277,7 +332,7 @@ namespace RentCConsole.Views {
                 Console.WriteLine("                                           3 - Start Date");
                 Console.WriteLine("                                           4 - End Date");
                 Console.WriteLine("                                           5 - Location");
-                Console.WriteLine("                                           ESC to Main menu");
+                Console.WriteLine("                                           6 - to Main menu");
                 number = Utility.InputAndValidatInt();
 
                 switch (number) {
@@ -331,6 +386,9 @@ namespace RentCConsole.Views {
                             location = false;
                         }
                         break;
+                    case 6:
+                        GoToMainMenu();
+                        break;
                     default:
                         number = 0;
                         break;
@@ -346,8 +404,10 @@ namespace RentCConsole.Views {
             MenuScreen();
         }
 
-       
-        
-       
+        private void BackToReports() {
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+            Reports();
+        }
     }
 }

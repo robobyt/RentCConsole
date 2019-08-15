@@ -10,7 +10,7 @@ namespace RentCConsole {
         public static DateTime InputAndValidatDateTime() {
             DateTime date = DateTime.UtcNow;
             while (!DateTime.TryParse(Console.ReadLine(), out date)) {
-                Console.WriteLine("Please enter date in format: dd.mm.year");
+                WarningMessage("Please enter date in format: dd.mm.year");
             }
             return date;
         }
@@ -18,7 +18,7 @@ namespace RentCConsole {
         public static int InputAndValidatInt() {
             int number = 0;
             while (!int.TryParse(Console.ReadLine(), out number)) {
-                Console.WriteLine("Please enter positive number");
+                WarningMessage("Please enter positive number");
             }
             return number;
         }
@@ -39,7 +39,7 @@ namespace RentCConsole {
 
         public static bool  CheckIfEndDateIsCorrect(DateTime startDate, DateTime endDate) {
             if(DateTime.Compare(endDate, startDate) < 0) {
-                Console.WriteLine("End date can't be earlier then start date. Input start date:");
+                WarningMessage("End date can't be earlier then start date. Input start date:");
                 return false;
             }
             return true;
@@ -48,7 +48,7 @@ namespace RentCConsole {
         // need to fix it
         public static bool CheckIfClientIsAdult(DateTime birthDate) {
              if(DateTime.Compare(DateTime.Now, birthDate.AddYears(18)) < 0) {
-                Console.WriteLine("Client has to be turn 18 yars. Enter Client Birthdate");
+                WarningMessage("Enter Client Birthdate. Client has to be turn 18 yars. ");
                 return false;
             }
 
@@ -57,22 +57,28 @@ namespace RentCConsole {
 
         public static bool CheckIfCorrectDate(DateTime startDate) {
               if(startDate.Day < DateTime.Now.Day) {
-                Console.WriteLine("Please, set date not earlier then today");
+                WarningMessage("Please, set date not earlier then today");
                 return false;
             }
             return true;
         }
 
         public static void WarningMessage(string str) {
-
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(str);
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
         }
 
         public static void ErrorMessage(string str) {
-
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine(str);
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
         }
 
         public static void SuccessMessage(string str) {
-
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine(str);
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
         }
     }
 }
